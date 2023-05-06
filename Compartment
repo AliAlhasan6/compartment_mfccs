@@ -1,0 +1,67 @@
+import librosa
+import numpy as np
+from scipy.spatial.distance import cosine
+import matplotlib.pyplot as plt
+
+# Function to extract MFCC features from an audio signal
+def extract_mfcc(audio, sr):
+    mfccs = librosa.feature.mfcc(y=audio, sr=sr)
+    return mfccs
+
+# Define two audio files to compare
+audio_file_1 = '/home/lawliet/PycharmProjects/Voice_Mimic/Ali3.wav'
+audio_file_2 = '/home/lawliet/PycharmProjects/Voice_Mimic/Ali_gen.wav'
+
+# Load the audio files
+audio_1, sr_1 = librosa.load(audio_file_1, sr=None, mono=True)
+audio_2, sr_2 = librosa.load(audio_file_2, sr=None, mono=True)
+
+# Extract MFCC features for each audio file
+mfcc_1 = extract_mfcc(audio_1, sr_1)
+mfcc_2 = extract_mfcc(audio_2, sr_2)
+
+# Ensure the MFCC feature vectors have the same length
+min_length = min(mfcc_1.shape[1], mfcc_2.shape[1])
+mfcc_1 = mfcc_1[:, :min_length]
+mfcc_2 = mfcc_2[:, :min_length]
+
+# Normalize the MFCC vectors
+mfcc_1_normalized = mfcc_1 / np.linalg.norm(mfcc_1)
+mfcc_2_normalized = mfcc_2 / np.linalg.norm(mfcc_2)
+
+# Compute the cosine similarity between the normalized MFCC vectors
+similarity = 1 - cosine(mfcc_1_normalized.flatten(), mfcc_2_normalized.flatten())
+
+# Define a threshold to determine if the voices belong to the same speaker
+threshold = 0.8
+
+# Clear output
+plt.clf()
+
+# Display the similarity score
+print("Similarity Score:", similarity)
+
+# Plot the MFCCs
+plt.figure(figsize=(10, 4))
+plt.imshow(mfcc_1, cmap='viridis', origin='lower', aspect='auto')
+plt.colorbar(format='%+2.0f dB')
+plt.title('MFCCs of Audio 1')
+plt.xlabel('Frame')
+plt.ylabel('MFCC Coefficients')
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10, 4))
+plt.imshow(mfcc_2, cmap='viridis', origin='lower', aspect='auto')
+plt.colorbar(format='%+2.0f dB')
+plt.title('MFCCs of Audio 2')
+plt.xlabel('Frame')
+plt.ylabel('MFCC Coefficients')
+plt.tight_layout()
+plt.show()
+
+# Compare the similarity score with the threshold
+if similarity >= threshold:
+    print("The voices belong to the same speaker.")
+else:
+    print("The voices belong to different speakers.")
