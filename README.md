@@ -12,3 +12,4 @@ Is the generated voice from the voice cloning model (Ali_gen.wav)
 ![image](https://user-images.githubusercontent.com/92336892/236639623-d3385eba-0d45-43ca-8850-15e8e7d10144.png)
 
 The voices belong to the same speaker.
+![Screenshot from 2023-05-21 17-14-21](https://github.com/AliAlhasan6/compartment_mfccs/assets/92336892/ffc108c0-f223-40b6-badd-33cf37d4865d)
